@@ -48,7 +48,14 @@ store = {
 
 # TODO здесь ваш код
 
-
+for name in goods.items():
+    price = 0
+    col_product = 0
+    a = store[name[1]]
+    for i in a:
+        col_product =col_product + i['quantity']
+        price =price+ i['quantity']*i['price']
+    print('Товар', name[0], '-',col_product,'шт, стоимость', price, 'руб.')
 
 
 
