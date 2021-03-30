@@ -29,6 +29,82 @@ import simple_draw as sd
 
 # TODO здесь ваш код
 
+# x= int(input('Введите координаты начальной точки отрисовки x:'))
+# y= int(input('Введите координаты начальной точки отрисовки y:'))
+
+
+
+def draw_a_triangle(start_point, angle_of_inclination, side_length,color_w):
+    line_1 = sd.get_vector(start_point=start_point, angle=angle_of_inclination, length=side_length, width=3)
+    line_1.draw(color=color_w)
+
+    line_2 = sd.get_vector(start_point=line_1.end_point, angle=120, length=side_length, width=3)
+    line_2.draw(color=color_w)
+
+    line_3 = sd.get_vector(start_point=line_2.end_point, angle=240, length=side_length, width=3)
+    line_3.draw(color=color_w)
+
+def draw_a_square(start_point, angle_of_inclination, side_length,color_w):
+    line_1 = sd.get_vector(start_point=start_point, angle=angle_of_inclination, length=side_length, width=3)
+    line_1.draw(color=color_w)
+
+    line_2 = sd.get_vector(start_point=line_1.end_point, angle=90, length=side_length, width=3)
+    line_2.draw(color=color_w)
+
+    line_3 = sd.get_vector(start_point=line_2.end_point, angle=180, length=side_length, width=3)
+    line_3.draw(color=color_w)
+
+    line_4 = sd.get_vector(start_point=line_3.end_point, angle=270, length=side_length, width=3)
+    line_4.draw(color=color_w)
+
+def draw_5_corner(start_point, angle_of_inclination, side_length,color_w):
+    line_1 = sd.get_vector(start_point=start_point, angle=angle_of_inclination, length=side_length, width=3)
+    line_1.draw(color=color_w)
+
+    line_2 = sd.get_vector(start_point=line_1.end_point, angle=72, length=side_length, width=3)
+    line_2.draw(color=color_w)
+
+    line_3 = sd.get_vector(start_point=line_2.end_point, angle=144, length=side_length, width=3)
+    line_3.draw(color=color_w)
+
+    line_4 = sd.get_vector(start_point=line_3.end_point, angle=216, length=side_length, width=3)
+    line_4.draw(color=color_w)
+
+
+    line_5 = sd.get_vector(start_point=line_4.end_point, angle=288, length=side_length, width=3)
+    line_5.draw(color=color_w)
+
+def draw_6_corner(start_point, angle_of_inclination, side_length,color_w):
+    line_1 = sd.get_vector(start_point=start_point, angle=angle_of_inclination, length=side_length, width=3)
+    line_1.draw(color=color_w)
+
+    line_2 = sd.get_vector(start_point=line_1.end_point, angle=60, length=side_length, width=3)
+    line_2.draw(color=color_w)
+
+    line_3 = sd.get_vector(start_point=line_2.end_point, angle=120, length=side_length, width=3)
+    line_3.draw(color=color_w)
+
+    line_4 = sd.get_vector(start_point=line_3.end_point, angle=180, length=side_length, width=3)
+    line_4.draw(color=color_w)
+
+    line_5 = sd.get_vector(start_point=line_4.end_point, angle=240, length=side_length, width=3)
+    line_5.draw(color=color_w)
+
+    line_6 = sd.get_vector(start_point=line_5.end_point, angle=300, length=side_length, width=3)
+    line_6.draw(color=color_w)
+
+
+draw_a_triangle(start_point = sd.get_point(350, 100),angle_of_inclination = 0, side_length = 150, color_w=(255, 50, 0))
+draw_a_square(start_point = sd.get_point(100, 350),angle_of_inclination = 0, side_length = 150, color_w=(255, 50, 0))
+draw_5_corner(start_point = sd.get_point(350, 350),angle_of_inclination = 0, side_length = 130, color_w=(255, 50, 0))
+draw_6_corner(start_point = sd.get_point(100, 100),angle_of_inclination = 0, side_length = 100, color_w=(255, 50, 0))
+
+
+
+
+
+
+
 # Часть 1-бис.
 # Попробуйте прикинуть обьем работы, если нужно будет внести изменения в этот код.
 # Скажем, связывать точки не линиями, а дугами. Или двойными линиями. Или рисовать круги в угловых точках. Или...
