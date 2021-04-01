@@ -121,23 +121,39 @@ def draw_6_corner(start_point, angle_of_inclination, side_length, color_w):
 #   в начальной/конечной точках рисуемой фигуры (если он есть)
 
 
-def start_shape(start_point, angle_of_inclination, side_length):
-    start = sd.get_vector(start_point=start_point, angle=angle_of_inclination, length=side_length, width=3)
-    return start
+def vector(vector_start, length, angle):
+    v = sd.get_vector(vector_start, angle, length)
+    return v.end_point
 
 
-def paint_shape(n, start_point, side_length):
-    angel = 0
-    angle_start = 360 / n
-    draw_line(start_point=start_point, angle_of_inclination=start, side_length=side_length)
+def polygon(point, heads, length):
+    angle = 0
+    angle_start = 15
+    angle_polygon = 360 / heads
+    point_polygon = point
+    for _ in range(heads):
+        if _ == 0:
+            angle = angle_start
+        else:
+            angle += angle_polygon
+        if _ < (heads - 1):
+            end_point = vector(point, length, angle)
+        else:
+            end_point = point_polygon
+        sd.line(start_point=point, end_point=end_point, color=sd.COLOR_YELLOW, width=1)
+        point = end_point
 
-    for i in range(n):
-        start += corner
-        print(start)
-        return draw_line(start_point=start_point, angle_of_inclination=start, side_length=side_length)
+start_point = [(100, 100, 150, 3), (350, 100, 150, 4), (100, 350, 100, 5), (350, 350, 100, 6)]
+
+for _ in start_point:
+    point_start = sd.get_point(_[0], _[1])
+    length_start = _[2]
+    heads_start = _[3]
+    polygon(point_start, heads_start, length_start)
 
 
-treugolnik(n=5, start_point=sd.get_point(300, 350), side_length=150)
+# x, y= 100, 100
+# paint_shape(3, sd.get_point(100, 100), 150)
 
 # Часть 2-бис.
 # А теперь - сколько надо работы что бы внести изменения в код? Выгода на лицо :)
