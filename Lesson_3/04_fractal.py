@@ -29,23 +29,24 @@ sd.resolution = (1200, 600)
 
 # TODO здесь ваш код
 
-point_0 = sd.get_point(300, 5)
+point_0 = sd.get_point(300, 30)
 
 
-#
-#
+
 def draw_branches(point, angle, length):
-
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=3)
+    if length < 1:
+        return
+    delta = 30
+    v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=1)
     v1.draw()
-    v2 = sd.get_vector(start_point=point, angle=180 - angle, length=length, width=3)
-    v2.draw()
-    return v1.end_point,
+    new_point = v1.end_point
+    new_length = length * .75
+    draw_branches(point=new_point, angle=angle+delta, length=new_length)
+    draw_branches(point=new_point, angle=angle-delta, length=new_length)
+    return
 
 
-
-
-draw_branches(point=point_0, angle=60, length=150)
+draw_branches(point=point_0, angle=90, length=100)
 
 # def draw_branches(point, angle, length):
 #     if length<10:
