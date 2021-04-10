@@ -32,36 +32,28 @@ sd.resolution = (1200, 600)
 point_0 = sd.get_point(300, 30)
 
 
-
 def draw_branches(point, angle, length):
     if length < 1:
         return
+
+    a = sd.random_number(0, 20)
+    b = sd.random_number(0, (30 * 40))
     delta = 30
     v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=1)
-    v1.draw()
+
+    if length < 5:
+        v1.draw(color=sd.COLOR_GREEN, )
+    else:
+        v1.draw(width=2)
     new_point = v1.end_point
-    new_length = length * .75
-    draw_branches(point=new_point, angle=angle+delta, length=new_length)
-    draw_branches(point=new_point, angle=angle-delta, length=new_length)
+    new_length = length * .75 + a / 100
+
+    draw_branches(point=new_point, angle=angle + (delta + b / 100), length=new_length)
+    draw_branches(point=new_point, angle=angle - (delta + b / 100), length=new_length)
     return
 
 
 draw_branches(point=point_0, angle=90, length=100)
-
-# def draw_branches(point, angle, length):
-#     if length<10:
-#         return 1
-#     v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=3)
-#     v1.draw()
-#     next_point = v1.end_point
-#     next_angle = angle - 30
-#     next_length = length * .75
-#     draw_branches(point=next_point, angle=next_angle, length=next_length)
-#
-#
-# draw_branches(point=point_0, angle=90, length=200)
-
-# next_point = draw_branches(point=next_point, angle=90 - 30, length=150 * 0.75)
 
 # 4) Усложненное задание (делать по желанию)
 # - сделать рандомное отклонение угла ветвей в пределах 40% от 30-ти градусов
@@ -69,6 +61,7 @@ draw_branches(point=point_0, angle=90, length=100)
 # Возможный результат решения см lesson_004/results/exercise_04_fractal_02.jpg
 
 # Пригодятся функции
+
 # sd.random_number()
 
 sd.pause()
