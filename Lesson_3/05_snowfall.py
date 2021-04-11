@@ -7,14 +7,14 @@ import simple_draw as sd
 # - нарисовать падение этих N снежинок
 # - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
 
-N = 20
+N = 70
 # создаем списки для начальных точек координат отрисовки снежинок
 x_list = []
 y_list = []
 length_list = []
 for _ in range(N):  # заполняем списки
-    x_list.append(sd.random_number(400, 400))
-    y_list.append(sd.random_number(400, 400))
+    x_list.append(sd.random_number(0, 600))
+    y_list.append(sd.random_number(600, 2000))
     length_list.append(sd.random_number(15, 30))
 
 # sd.random_number(100, 700)
@@ -40,20 +40,16 @@ def my_snowflake(point, length):
 
   # передаем х и у
 while True:  # отрисовываем снижинки и перемещаем
+    sd.clear_screen() # отчистка экрана
     for _ in range(N):
-        # sd.clear_screen()  # отчистка экрана
+
         point = sd.get_point(x_list[_], y_list[_])
         my_snowflake(point, length_list[_])
-        y_list[_] -= sd.random_number(1, 2)
+        y_list[_] -= sd.random_number(1, 4)
         x_list[_] += sd.random_number(-2, 2)
         if y_list[_] < 0:
             break
-        # point2 = sd.get_point(x_list[_+1], y_list[_+1])
-        # sd.snowflake(center=point2, length=length_list[_+1])
-        # y_list[_+1] -= sd.random_number(1, 2)
-        # x_list[_+1] += sd.random_number(-2, 2)
-        # if y_list[_+1] < 0:
-        #     break
+
 
 
 
