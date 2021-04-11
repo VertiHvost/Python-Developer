@@ -56,6 +56,7 @@ while True:  # отрисовываем снижинки и перемещаем
         #     break
 
 
+
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
