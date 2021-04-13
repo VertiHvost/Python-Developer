@@ -7,15 +7,17 @@ import simple_draw as sd
 # - нарисовать падение этих N снежинок
 # - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
 
-N = 70
+N = 40
 # создаем списки для начальных точек координат отрисовки снежинок
 x_list = []
 y_list = []
 length_list = []
+i_list = []
 for _ in range(N):  # заполняем списки
     x_list.append(sd.random_number(0, 600))
     y_list.append(sd.random_number(600, 2000))
     length_list.append(sd.random_number(15, 30))
+    i_list.append(sd.random_number(1, 100))
 
 # sd.random_number(100, 700)
 # Пригодятся функции
@@ -27,32 +29,28 @@ for _ in range(N):  # заполняем списки
 
 
 # TODO здесь ваш код
-# def tochka(x, y):
-#     point = sd.get_point(x, y)
-#     sd.snowflake(center=point, length=50)
-#     y -= 10
-#     x += 10
-#     if y<0:
-#         break
-def my_snowflake(point, length):
-    sd.snowflake(center=point, length=length)
+
+
+
+def my_snowflake(point, length,color):
+    sd.snowflake(center=point, length=length, color=color)
 
 
   # передаем х и у
 while True:  # отрисовываем снижинки и перемещаем
-    sd.clear_screen() # отчистка экрана
+    sd.start_drawing() # отчистка экрана
     for _ in range(N):
-
+        if y_list[_] < i_list[_]:
+            continue
         point = sd.get_point(x_list[_], y_list[_])
-        my_snowflake(point, length_list[_])
+        point2 = sd.get_point(x_list[_-1], y_list[_-1])
+        my_snowflake(point2, length_list[_-1],color=sd.COLOR_WHITE)
         y_list[_] -= sd.random_number(1, 4)
         x_list[_] += sd.random_number(-2, 2)
-        if y_list[_] < 0:
-            break
+        my_snowflake(point, length_list[_], color = sd.background_color)
 
 
-
-
+    sd.finish_drawing()
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
