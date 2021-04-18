@@ -5,4 +5,6 @@
 
 # TODO здесь ваш код
 
+from room_1 import folks
 
+print('В комнате room_1 живут:', folks[1], 'и', folks[0])
