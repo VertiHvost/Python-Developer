@@ -7,6 +7,9 @@
 
 # TODO здесь ваш код
 
+from room_1 import folks
+from room_2 import folks as folks_2
 
-
+folks = ', '.join(folks+folks_2)
+print('На районе живут:', folks)
 
