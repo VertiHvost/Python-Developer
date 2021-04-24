@@ -43,4 +43,15 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
+from DZ5_game_BaC import the_hidden_number, entered_number, col_B_cnd_C
+
 # TODO здесь ваш код...
+
+while True:
+    user_number = input()
+
+
+
+
+
+
