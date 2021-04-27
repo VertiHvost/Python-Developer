@@ -44,14 +44,33 @@
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
 from DZ5_game_BaC import the_hidden_number, entered_number, col_B_cnd_C
+from mastermind_engine import number, counting_cows_and_bulls
 
 # TODO здесь ваш код...
 
+new_number = number()
+
 while True:
-    user_number = input()
+    user_number = list(input('Введите четырехзначное число:'))
+    if len(user_number) != 4:
+        print('Вы ввели не правильное число!')
+        continue
 
+    if new_number == user_number:
+        win = input('You win! Start over? y/n: ')
+        if win == 'y':
 
+            new_number = number()
+            continue
+        else:
+            break
 
-
-
+    for n, d in enumerate(user_number):
+        if new_number[n] == d:
+            print("B", end="")
+        elif d in new_number:
+            print("C", end="")
+        else:
+            print(d, end="")
+    print(new_number)
 
