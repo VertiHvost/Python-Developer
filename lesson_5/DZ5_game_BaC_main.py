@@ -43,7 +43,7 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from DZ5_game_BaC import the_hidden_number, entered_number, col_B_cnd_C
+# from DZ5_game_BaC import the_hidden_number, entered_number, col_B_cnd_C
 from mastermind_engine import number, counting_cows_and_bulls
 
 # TODO здесь ваш код...
