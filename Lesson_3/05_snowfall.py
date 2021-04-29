@@ -19,6 +19,7 @@ for _ in range(N):  # заполняем списки
     length_list.append(sd.random_number(15, 30))
     i_list.append(sd.random_number(1, 100))
 
+
 # sd.random_number(100, 700)
 # Пригодятся функции
 # sd.get_point()
@@ -31,24 +32,22 @@ for _ in range(N):  # заполняем списки
 # TODO здесь ваш код
 
 
-
-def my_snowflake(point, length,color):
+def my_snowflake(point, length, color):
     sd.snowflake(center=point, length=length, color=color)
 
 
-  # передаем х и у
+# передаем х и у
 while True:  # отрисовываем снижинки и перемещаем
-    sd.start_drawing() # отчистка экрана
+    sd.start_drawing()  # отчистка экрана
     for _ in range(N):
         if y_list[_] < i_list[_]:
             continue
         point = sd.get_point(x_list[_], y_list[_])
-        point2 = sd.get_point(x_list[_-1], y_list[_-1])
-        my_snowflake(point2, length_list[_-1],color=sd.COLOR_WHITE)
+        point2 = sd.get_point(x_list[_ - 1], y_list[_ - 1])
+        my_snowflake(point2, length_list[_ - 1], color=sd.COLOR_WHITE)
         y_list[_] -= sd.random_number(1, 4)
         x_list[_] += sd.random_number(-2, 2)
-        my_snowflake(point, length_list[_], color = sd.background_color)
-
+        my_snowflake(point, length_list[_], color=sd.background_color)
 
     sd.finish_drawing()
     sd.sleep(0.1)
