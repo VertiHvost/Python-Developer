@@ -71,19 +71,21 @@ class House:
         return 'В доме еды осталось {}, денег осталось {}'.format(self.food, self.money)
 
 
+citizen = [
+    Man(name='Бивис'),
+    Man(name='Батхед'),
+    Man(name='Кенни'),
+]
+
 my_sweet_home = House()
-
-beavis = Man(name='Бивис')
-butthead = Man(name='Батхет')
-
-beavis.enter_the_house(house=my_sweet_home)
-butthead.enter_the_house(house=my_sweet_home)
+for citisen in citizen:
+    citisen.enter_the_house(house=my_sweet_home)
 
 for day in range(1, 21):
     cprint('=================== день {} ==================='.format(day), color='yellow')
-    beavis.act()
-    butthead.act()
+    for citisen in citizen:
+        citisen.act()
     cprint('================ в конце дня =================')
-    print(beavis)
-    print(butthead)
+    for citisen in citizen:
+        print(citisen)
     print(my_sweet_home)
