@@ -22,11 +22,11 @@ class Man:
 
     def work(self):
         print('{} сходил на работу'.format(self.name))
-        self.money += 150
+        self.house.money += 150
         self.fullness -= 10
 
-    def play_DOTA(self):
-        print('{} играл в доту целый день'.format(self.name))
+    def watch_TV(self):
+        print('{} смотрел телек целый день'.format(self.name))
         self.fullness -= 10
 
     def shopping(self):
@@ -58,7 +58,7 @@ class Man:
         elif dice == 2:
             self.eat()
         else:
-            self.play_DOTA()
+            self.watch_TV()
 
 
 class House:
@@ -67,13 +67,23 @@ class House:
         self.food = 10
         self.money = 50
 
+    def __str__(self):
+        return 'В доме еды осталось {}, денег осталось {}'.format(self.food, self.money)
 
-beavis = Man(name='В1')
-butthead = Man(name='В2')
 
-for day in range(1, 365):
+my_sweet_home = House()
+
+beavis = Man(name='Бивис')
+butthead = Man(name='Батхет')
+
+beavis.enter_the_house(house=my_sweet_home)
+butthead.enter_the_house(house=my_sweet_home)
+
+for day in range(1, 21):
     cprint('=================== день {} ==================='.format(day), color='yellow')
     beavis.act()
     butthead.act()
+    cprint('================ в конце дня =================')
     print(beavis)
     print(butthead)
+    print(my_sweet_home)
