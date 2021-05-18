@@ -7,24 +7,22 @@ class Man:
     def __init__(self, name):
         self.name = name
         self.fullness = 50
-        self.food = 50
-        self.money = 0
+        self.house = None
 
     def __str__(self):
-        return 'Я - {}, сытость {}, еды осталось {}, денег осталось {}'.format(self.name, self.fullness, self.food,
-                                                                               self.money)
+        return 'Я - {}, сытость {}'.format(self.name, self.fullness)
 
     def eat(self):
-        if self.food >= 10:
+        if self.house.food >= 10:
             print('{} поел'.format(self.name))
             self.fullness += 10
-            self.food -= 10
+            self.house.food -= 10
         else:
             print('{} нет еды'.format(self.name))
 
     def work(self):
         print('{} сходил на работу'.format(self.name))
-        self.money += 50
+        self.money += 150
         self.fullness -= 10
 
     def play_DOTA(self):
@@ -32,12 +30,17 @@ class Man:
         self.fullness -= 10
 
     def shopping(self):
-        if self.money >= 50:
+        if self.house.money >= 50:
             print('{} сходил в магазин за едой'.format(self.name))
-            self.money -= 50
-            self.food += 10
+            self.house.money -= 50
+            self.house.food += 10
         else:
             print('{} деньги кончились!'.format(self.name))
+
+    def enter_the_house(self, house):
+        self.house = house
+        self.fullness -= 10
+        cprint('{}, въехал в дом!!!'.format(self.name), color='green')
 
     def act(self):
         if self.fullness <= 0:
@@ -46,9 +49,9 @@ class Man:
         dice = randint(1, 6)
         if self.fullness < 20:
             self.eat()
-        elif self.food < 10:
+        elif self.house.food < 10:
             self.shopping()
-        elif self.money < 50:
+        elif self.house.money < 50:
             self.work()
         elif dice == 1:
             self.work()
@@ -58,16 +61,19 @@ class Man:
             self.play_DOTA()
 
 
-vasya = Man(name='Вася')
-print(vasya)
-vasya.eat()
-print(vasya)
-vasya.work()
-print(vasya)
-vasya.play_DOTA()
-print(vasya)
+class House:
+
+    def __init__(self):
+        self.food = 10
+        self.money = 50
+
+
+beavis = Man(name='В1')
+butthead = Man(name='В2')
 
 for day in range(1, 365):
     cprint('=================== день {} ==================='.format(day), color='yellow')
-    vasya.act()
-    print(vasya)
+    beavis.act()
+    butthead.act()
+    print(beavis)
+    print(butthead)
