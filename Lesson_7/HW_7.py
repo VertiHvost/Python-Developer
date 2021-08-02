@@ -5,7 +5,9 @@ from termcolor import cprint
 class Road:
 
     def __init__(self, start, end, distance):
-        pass
+        self.start = start
+        self.end = end
+        self.distance = distance
 
 
 class Warehouse:
@@ -13,25 +15,34 @@ class Warehouse:
     def __init__(self, name, content=0):
         self.name = name
         self.content = content
-        self.roed_out = None
+        self.road_out = None
+        self.queue_in = []
+        self.queue_out = []
 
     def __str__(self):
         return 'Склад {} груза {} '.format(self.name, self.content)
 
     def set_road_out(self, road):
-        self.roed_out = road
+        self.road_out = road
 
     def track_arrived(self, truck):
-        pass
+        self.queue_in.append(truck)
+        truck.place = self
+        print('{} прибыл грузовк {}'.format(self.name, truck))
 
     def get_next_truck(self):
-        pass
+        if self.queue_in:
+            truck = self.queue_in.pop()
+            return truck
 
-    def tuck_ready(self, truck):
-        pass
+    def truck_ready(self, truck):
+        self.queue_out.append(truck)
+        print('{} грузовк {} '.format(self.name, truck))
 
     def act(self):
-        pass
+        while self.queue_out:
+            truck = self.queue_out.pop()
+            truck.go_to(road=self.road_out)
 
 
 class Vehicle:
@@ -46,9 +57,11 @@ class Vehicle:
 
     def tank_up(self):
         self.fuel += 1000
+        print('{} заправился'.format(self.model))
 
 
 class Truck(Vehicle):
+    fuel_rate = 50
 
     def __init__(self, model, body_space=1000):
         super().__init__(model=model)
@@ -63,9 +76,13 @@ class Truck(Vehicle):
         return res + ' груза {}'.format(self.cargo)
 
     def ride(self):
+        self.fuel -= self.fuel_rate
         if self.distance_to_target > self.velocity:
             self.distance_to_target -= self.velocity
-        print('{} едет по дороге, осталось {}'.format(self.model, self.distance_to_target))
+            print('{} едет по дороге, осталось {}'.format(self.model, self.distance_to_target))
+        else:
+            self.place.end.track_arrived(self)
+            print('{} доехал'.format(self.model))
 
     def go_to(self, road):
         self.place = road
@@ -80,6 +97,7 @@ class Truck(Vehicle):
 
 
 class AutoLoader(Vehicle):
+    fuel_rate = 30
 
     def __init__(self, model, bucket_capacity=100, warehouse=None, role='loader'):
         super().__init__(model=model)
@@ -97,27 +115,38 @@ class AutoLoader(Vehicle):
             self.tank_up()
         elif self.truck is None:
             self.truck = self.warehouse.get_next_truck()
+            print('{} взял в работу {}'.format(self.model, self.truck))
         elif self.role == 'loader':
             self.load()
         else:
             self.unload()
 
     def load(self):
+        self.fuel -= self.fuel_rate
         target_cargo_rest = self.truck.body_space - self.truck.cargo
-        if self.fuel.cargo >= target_cargo_rest:
+        if target_cargo_rest >= self.bucket_capacity:
             self.warehouse.content -= self.bucket_capacity
             self.truck.cargo += self.bucket_capacity
         else:
             self.warehouse.content -= self.bucket_capacity
             self.truck.cargo += target_cargo_rest
+        print('{} грузил {}'.format(self.model, self.truck))
+        if self.truck.cargo == self.truck.body_space:
+            self.warehouse.truck_ready(self.truck)
+            self.truck = None
 
     def unload(self):
+        self.fuel -= self.fuel_rate
         if self.truck.cargo >= self.bucket_capacity:
             self.truck.cargo -= self.bucket_capacity
             self.warehouse.content += self.bucket_capacity
         else:
             self.truck.cargo -= self.truck.cargo
             self.warehouse.content += self.truck.cargo
+        print('{} разгружал {}'.format(self.model, self.truck))
+        if self.truck.cargo == 0:
+            self.warehouse.truck_ready(self.truck)
+            self.truck = None
 
 
 TOTAL_CARGO = 100000
@@ -143,7 +172,7 @@ moscow.track_arrived(truck_2)
 hour = 0
 while piter.content < TOTAL_CARGO:
     hour += 1
-    cprint('----------------------- Час {} -----------------------', format(hour), color='red')
+    cprint('----------------------- Час {} -----------------------'.format(hour), color='red')
     truck_1.act()
     truck_2.act()
     loader_1.act()
