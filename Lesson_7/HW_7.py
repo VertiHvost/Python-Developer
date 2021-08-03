@@ -25,7 +25,7 @@ class Warehouse:
     def set_road_out(self, road):
         self.road_out = road
 
-    def track_arrived(self, truck):
+    def truck_arrived(self, truck):
         self.queue_in.append(truck)
         truck.place = self
         print('{} прибыл грузовк {}'.format(self.name, truck))
@@ -47,6 +47,7 @@ class Warehouse:
 
 class Vehicle:
     fuel_rate = 0
+    total_fuel = 0
 
     def __init__(self, model):
         self.model = model
@@ -57,11 +58,19 @@ class Vehicle:
 
     def tank_up(self):
         self.fuel += 1000
+        Vehicle.total_fuel += 1000
         print('{} заправился'.format(self.model))
+
+    def act(self):
+        if self.fuel <= 10:
+            self.tank_up()
+            return False
+        return True
 
 
 class Truck(Vehicle):
     fuel_rate = 50
+    dead_time = 0
 
     def __init__(self, model, body_space=1000):
         super().__init__(model=model)
@@ -81,7 +90,7 @@ class Truck(Vehicle):
             self.distance_to_target -= self.velocity
             print('{} едет по дороге, осталось {}'.format(self.model, self.distance_to_target))
         else:
-            self.place.end.track_arrived(self)
+            self.place.end.truck_arrived(self)
             print('{} доехал'.format(self.model))
 
     def go_to(self, road):
@@ -90,14 +99,16 @@ class Truck(Vehicle):
         print('{} выехал в путь'.format(self.model))
 
     def act(self):
-        if self.fuel <= 10:
-            self.tank_up()
-        elif isinstance(self.place, Road):
-            self.ride()
+        if super().act():
+            if isinstance(self.place, Road):
+                self.ride()
+            else:
+                Truck.dead_time += 1
 
 
 class AutoLoader(Vehicle):
     fuel_rate = 30
+    dead_time = 0
 
     def __init__(self, model, bucket_capacity=100, warehouse=None, role='loader'):
         super().__init__(model=model)
@@ -111,25 +122,36 @@ class AutoLoader(Vehicle):
         return res + ' грузим {}'.format(self.truck)
 
     def act(self):
-        if self.fuel <= 10:
-            self.tank_up()
-        elif self.truck is None:
-            self.truck = self.warehouse.get_next_truck()
-            print('{} взял в работу {}'.format(self.model, self.truck))
-        elif self.role == 'loader':
-            self.load()
-        else:
-            self.unload()
+        if super().act():
+            if self.truck is None:
+                self.truck = self.warehouse.get_next_truck()
+                if self.truck is None:
+                    print('{} нет грузовиков для работы'.format(self.model, self.truck))
+                    AutoLoader.dead_time += 1
+                else:
+                    print('{} взял в работу {}'.format(self.model, self.truck))
+            elif self.role == 'loader':
+                self.load()
+            else:
+                self.unload()
 
     def load(self):
+        if self.warehouse.content == 0:
+            print('{} на складе ничего нет'.format(self.model))
+            if self.truck:
+                self.warehouse.truck_ready(self.truck)
+                self.truck = None
+            return
         self.fuel -= self.fuel_rate
         target_cargo_rest = self.truck.body_space - self.truck.cargo
         if target_cargo_rest >= self.bucket_capacity:
-            self.warehouse.content -= self.bucket_capacity
-            self.truck.cargo += self.bucket_capacity
+            cargo = self.bucket_capacity
         else:
-            self.warehouse.content -= self.bucket_capacity
-            self.truck.cargo += target_cargo_rest
+            cargo = target_cargo_rest
+        if self.warehouse.content < cargo:
+            cargo = self.warehouse.content
+        self.warehouse.content -= cargo
+        self.truck.cargo += cargo
         print('{} грузил {}'.format(self.model, self.truck))
         if self.truck.cargo == self.truck.body_space:
             self.warehouse.truck_ready(self.truck)
@@ -163,25 +185,29 @@ piter.set_road_out(piter_moscow)
 loader_1 = AutoLoader(model='Bobcat', bucket_capacity=1000, warehouse=moscow, role='loader')
 loader_2 = AutoLoader(model='Lonking', bucket_capacity=500, warehouse=piter, role='unloader')
 
-truck_1 = Truck(model='КАМАЗ', body_space=5000)
-truck_2 = Truck(model='ГАЗ', body_space=2000)
-
-moscow.track_arrived(truck_1)
-moscow.track_arrived(truck_2)
+trucks = []
+for number in range(10):
+    truck = Truck(model='КАМАЗ номер {}'.format(number), body_space=5000)
+    moscow.truck_arrived(truck)
+    trucks.append(truck)
 
 hour = 0
 while piter.content < TOTAL_CARGO:
     hour += 1
     cprint('----------------------- Час {} -----------------------'.format(hour), color='red')
-    truck_1.act()
-    truck_2.act()
+    for truck in trucks:
+        truck.act()
     loader_1.act()
     loader_2.act()
     moscow.act()
     piter.act()
-    cprint(truck_1, color='cyan')
-    cprint(truck_2, color='cyan')
+    for truck in trucks:
+        cprint(truck, color='cyan')
     cprint(loader_1, color='cyan')
     cprint(loader_2, color='cyan')
     cprint(moscow, color='cyan')
     cprint(piter, color='cyan')
+
+cprint('всего затрачено топлива {}'.format(Vehicle.total_fuel), color='yellow')
+cprint('общий простой грузовиков {}'.format(Truck.dead_time), color='yellow')
+cprint('Общий простой погрузчиков {}'.format(AutoLoader.dead_time), color='yellow')
